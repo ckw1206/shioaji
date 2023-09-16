@@ -29,8 +29,7 @@ def gsheet(sheet_name,val,row):
 
     sheet = client.open_by_key(os.getenv("GOOGLE_SHEETS_ID")).worksheet(sheet_name)
     # sheet.append_row(val)
-    # sheet.insert_row(val,row)
-    print(val," run successfully.")
+    sheet.insert_row(val,row)
 
 api = sj.Shioaji()
 # print(sj.__version__)
