@@ -77,15 +77,10 @@ for item in positions:
     values = [float(value) for value in row.values()]
     values.insert(0, today)
     gsheet(item.code,values,18)
-    gsheet('daily price',values,2)
 
 # Print out results
 table = tabulate(table_data, headers='keys', tablefmt='pretty')
 # print(table)
-# print("total Cost =", round(total_cost))
-# print("total P&L =", round(total_PNL))
-# print("total Value =", round(total_cost+total_PNL))
-# print("return rate =", round(total_PNL/total_cost*100,2),"%")
 
 gsheet('daily balance',[today,round(total_cost),round(total_PNL),round(total_cost+total_PNL),round(total_PNL/total_cost,4)],18)
 
