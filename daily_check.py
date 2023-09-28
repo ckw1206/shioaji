@@ -74,7 +74,7 @@ for item in positions:
 
     # Insert results into Google Sheets
     today = datetime.now().strftime('%y/%m/%d')
-    values = [float(value) for value in row.values()]
+    values = [str(value) if key == 'Code' else float(value) for key, value in row.items()]
     values.insert(0, today)
     gsheet(item.code,values,18)
 
