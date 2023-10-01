@@ -14,7 +14,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Check the platform from the sys module
 if sys.platform.startswith('linux'):
-    cred_path = "./creds.json"
+    cred_path = "./shioaji/creds.json"
 elif sys.platform.startswith('win'):
     cred_path = "./creds.json"
 else:
