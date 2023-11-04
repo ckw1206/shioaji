@@ -82,7 +82,7 @@ for item in positions:
 table = tabulate(table_data, headers='keys', tablefmt='pretty')
 # print(table)
 
-gsheet('daily balance',[today,round(total_cost),round(total_PNL),round(total_cost+total_PNL),round(total_PNL/total_cost,4)],18)
+gsheet('balance',[today,round(total_cost),round(total_PNL),round(total_cost+total_PNL),round(total_PNL/total_cost,4)],18)
 
 # logout
 api.logout()
