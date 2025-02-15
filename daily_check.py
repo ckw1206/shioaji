@@ -1,16 +1,40 @@
-from tabulate import tabulate
-from datetime import datetime
 import sys
 import os
+
+# Function to install a package
+def install_package(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# List of required packages
+required_packages = [
+    'tabulate',
+    'python-dotenv',
+    'shioaji',
+    'oauth2client',
+    'gspread'
+]
+
+# Check and install missing packages
+for package in required_packages:
+    try:
+        __import__(package)
+    except ImportError:
+        print(f"{package} not found. Installing...")
+        install_package(package)
+
+from tabulate import tabulate
+from datetime import datetime
 from dotenv import load_dotenv
-load_dotenv()
+from oauth2client.service_account import ServiceAccountCredentials
 
 # SinoPac API
 import shioaji as sj
 
 # Google Sheets
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+
+# Load env variables
+load_dotenv()
 
 # Check the platform from the sys module
 if sys.platform.startswith('linux'):
@@ -82,7 +106,7 @@ for item in positions:
 table = tabulate(table_data, headers='keys', tablefmt='pretty')
 # print(table)
 
-gsheet('balance',[today,round(total_cost),round(total_PNL),round(total_cost+total_PNL),round(total_PNL/total_cost,4)],18)
+gsheet('TW balance',[today,round(total_cost),round(total_PNL),round(total_cost+total_PNL),round(total_PNL/total_cost,4)],18)
 
 # logout
 api.logout()
