@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 # Function to install a package
 def install_package(package):
@@ -25,6 +26,8 @@ for package in required_packages:
 from tabulate import tabulate
 from datetime import datetime
 from dotenv import load_dotenv
+load_dotenv
+
 from oauth2client.service_account import ServiceAccountCredentials
 
 # SinoPac API
