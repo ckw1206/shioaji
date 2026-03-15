@@ -16,7 +16,18 @@ import gspread
 load_dotenv()
 
 def get_cred_path():
-    """Return the credentials file path based on platform."""
+    """Return the credentials file path.
+    
+    Uses CREDS_PATH env var if set, otherwise defaults based on platform:
+    - Windows: ./creds.json
+    - Linux: ./shioaji/creds.json
+    """
+    # Allow custom path via environment variable
+    custom_path = os.getenv("CREDS_PATH")
+    if custom_path:
+        return custom_path
+    
+    # Default paths by platform
     if sys.platform.startswith("linux"):
         return "./shioaji/creds.json"
     if sys.platform.startswith("win"):
