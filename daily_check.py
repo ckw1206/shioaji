@@ -60,18 +60,8 @@ def is_critical_error(error):
     Critical errors should stop execution immediately.
     Non-critical errors should be collected and reported at end.
     """
-    critical_exceptions = (
-        sj.error.LoginError,
-        sj.error.LoginFailed,
-        sj.error.ApiError,
-    )
-    
     error_msg = str(error).lower()
-    critical_keywords = ['login', 'authentication', 'account', 'balance']
-    
-    # Check if it's a known critical exception type
-    if isinstance(error, critical_exceptions):
-        return True
+    critical_keywords = ['login', 'authentication', 'account', 'balance', 'failed']
     
     # Check if error message contains critical keywords
     if any(keyword in error_msg for keyword in critical_keywords):
@@ -151,8 +141,7 @@ def main():
         if not stock_accounts and accounts:
             stock_accounts = [accounts[0]]
         
-        account = stock_accounts[0]
-        
+        # Validate we have an account
         if not stock_accounts:
             logging.error("No stock account found")
             raise SystemExit("No stock account found. Please check your Shioaji account.")
@@ -183,12 +172,12 @@ def main():
         
         table_data = {
             "Status": bal.status,
-            "Account Balance": round(bal.acc_balance),
+            "Account Balance": f"{bal.acc_balance:.2f}",
             "Date": bal.date,
             "Error Message": bal.errmsg,
         }
         print(tabulate([table_data], headers="keys", tablefmt="pretty"))
-        logging.info(f"Account balance: {bal.acc_balance}")
+        logging.info(f"Account balance: {bal.acc_balance:.2f}")
 
         # Positions
         logging.info("Fetching positions")
@@ -205,21 +194,28 @@ def main():
                 "ID": item.id,
                 "Code": item.code,
                 "Qty": item.quantity,
-                "Price": item.price,
-                "Last Price": item.last_price,
-                "P&L": round(item.pnl),
+                "Price": f"{item.price:.2f}",
+                "Last Price": f"{item.last_price:.2f}",
+                "P&L": f"{item.pnl:.2f}",
                 "YD Qty": item.yd_quantity,
                 "Interest": item.interest,
-                "Value": round(item.quantity * item.last_price),
+                "Value": f"{item.quantity * item.last_price:.2f}",
             }
             total_cost += item.quantity * item.price
             total_PNL += item.pnl
             table_data.append(row)
 
-            values = [
-                str(value) if key == "Code" else float(value)
-                for key, value in row.items()
-            ]
+            # Build values for Sheets - convert to float with 2 decimal places
+            values = []
+            for key, value in row.items():
+                if key == "Code":
+                    values.append(str(value))
+                elif key in ("ID", "Qty", "YD Qty", "Interest"):
+                    values.append(float(value))
+                elif isinstance(value, str):
+                    values.append(float(value))
+                else:
+                    values.append(float(f"{value:.2f}"))
             values.insert(0, today)
             
             # Wrap individual stock sync in try/except (non-critical)
@@ -240,7 +236,7 @@ def main():
         try:
             gsheet(
                 "TW balance",
-                [today, round(total_cost), round(total_PNL), round(total_cost + total_PNL), pnl_pct],
+                [today, f"{total_cost:.2f}", f"{total_PNL:.2f}", f"{(total_cost + total_PNL):.2f}", pnl_pct],
                 18,
                 cred_path=cred_path,
             )
@@ -250,7 +246,7 @@ def main():
             logging.warning(error_msg)
             errors.append(error_msg)
 
-        logging.info(f"Completed successfully - Total cost: {total_cost}, P&L: {total_PNL}")
+        logging.info(f"Completed successfully - Total cost: {total_cost:.2f}, P&L: {total_PNL:.2f}")
         
     except Exception as e:
         if is_critical_error(e):
