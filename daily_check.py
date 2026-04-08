@@ -236,7 +236,7 @@ def main():
         try:
             gsheet(
                 "TW balance",
-                [today, f"{total_cost:.2f}", f"{total_PNL:.2f}", f"{(total_cost + total_PNL):.2f}", pnl_pct],
+                [today, round(total_cost, 2), round(total_PNL, 2), round(total_cost + total_PNL, 2), pnl_pct],
                 18,
                 cred_path=cred_path,
             )
