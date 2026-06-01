@@ -155,26 +155,36 @@ def main():
         
         # Check status - it can be an int or an enum like FetchStatus
         status = bal.status
-        status_ok = False
-        if hasattr(status, 'value'):
-            # Handle enum like FetchStatus
-            status_ok = status.value == 'Fetched'
-        elif hasattr(status, '__int__'):
-            # Handle int status
-            status_ok = int(status) == 0
-        else:
-            # Default: check if truthy
-            status_ok = bool(status)
-        
-        if not status_ok or not bal.acc_balance:
-            logging.error(f"Account balance error: {bal.errmsg}")
-            raise SystemExit(f"Failed to get account balance: {bal.errmsg}")
-        
+        # Normalize status to a string for safe comparison and display
+        try:
+            if hasattr(status, 'name'):
+                status_str = status.name
+            elif hasattr(status, 'value'):
+                status_str = str(status.value)
+            else:
+                status_str = str(status)
+        except Exception:
+            status_str = str(status)
+
+        # Consider the fetch successful when status text equals 'Fetched' (case-insensitive)
+        status_ok = isinstance(status_str, str) and status_str.lower() == 'fetched'
+
+        # Safely coerce account balance to a float when possible
+        acc_balance = getattr(bal, 'acc_balance', None)
+        try:
+            acc_balance_val = float(acc_balance) if acc_balance is not None else None
+        except Exception:
+            acc_balance_val = None
+
+        if not status_ok or acc_balance_val is None:
+            logging.error(f"Account balance error: {getattr(bal, 'errmsg', None)}")
+            raise SystemExit(f"Failed to get account balance: {getattr(bal, 'errmsg', None)}")
+
         table_data = {
-            "Status": bal.status,
-            "Account Balance": f"{bal.acc_balance:.2f}",
-            "Date": bal.date,
-            "Error Message": bal.errmsg,
+            "Status": status_str,
+            "Account Balance": f"{acc_balance_val:.2f}",
+            "Date": getattr(bal, 'date', None),
+            "Error Message": getattr(bal, 'errmsg', None),
         }
         print(tabulate([table_data], headers="keys", tablefmt="pretty"))
         logging.info(f"Account balance: {bal.acc_balance:.2f}")
@@ -211,11 +221,20 @@ def main():
                 if key == "Code":
                     values.append(str(value))
                 elif key in ("ID", "Qty", "YD Qty", "Interest"):
-                    values.append(float(value))
+                    try:
+                        values.append(float(value))
+                    except Exception:
+                        values.append(0.0)
                 elif isinstance(value, str):
-                    values.append(float(value))
+                    try:
+                        values.append(float(value))
+                    except Exception:
+                        values.append(0.0)
                 else:
-                    values.append(float(f"{value:.2f}"))
+                    try:
+                        values.append(float(f"{value:.2f}"))
+                    except Exception:
+                        values.append(0.0)
             values.insert(0, today)
             
             # Wrap individual stock sync in try/except (non-critical)
