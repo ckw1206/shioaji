@@ -71,6 +71,30 @@ GOOGLE_SHEETS_ID=your_google_spreadsheet_id
 python shioaji_sync.py
 ```
 
+## Running with Docker
+
+Instead of running the script manually or wiring up your own OS-level scheduler, you can run it in a container that fires on a cron schedule.
+
+1. Make sure `.env` and `creds.json` exist in the project root (see Setup above).
+2. Optionally set `CRON_SCHEDULE` and `TZ` in `.env` (defaults to weekdays at 9am `Asia/Taipei` — see `.env.example`).
+3. Build and start the container:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Check logs (each scheduled run's output appears here, same as running it directly):
+
+   ```bash
+   docker compose logs -f
+   ```
+
+5. To change the schedule, edit `CRON_SCHEDULE` in `.env` and recreate the container:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
 ## Supported Platforms
 
 | Platform | Default Credentials Path |

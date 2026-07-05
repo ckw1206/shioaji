@@ -1,0 +1,12 @@
+services:
+  shioaji-sync:
+    build: .
+    container_name: shioaji-sync
+    environment:
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 9 * * 1-5}
+      TZ: ${TZ:-Asia/Taipei}
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./creds.json:/app/creds.json:ro
+      - ./shioaji.log:/app/shioaji.log
+    restart: unless-stopped
