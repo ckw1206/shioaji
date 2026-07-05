@@ -1,6 +1,14 @@
-shioaji.log
-.env
-logs
-creds.json
+# Python
+.venv
 *.pyc
 __pycache__/
+
+# Log
+shioaji.log
+logs
+
+# Env
+.env
+
+# Secret
+creds.json
