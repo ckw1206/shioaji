@@ -1,0 +1,14 @@
+.venv/
+.git/
+.github/
+node_modules/
+openspec/
+test/
+docs/
+*.log
+.env
+.env.example
+creds.json
+README.md
+package.json
+package-lock.json
