@@ -12,3 +12,6 @@ logs
 
 # Secret
 creds.json
+
+# Superpower
+docs/superpowers
