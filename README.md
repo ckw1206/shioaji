@@ -1,4 +1,4 @@
-# Shioaji Daily Check
+# Shioaji Sync
 
 A Python script that fetches your Shioaji (SinoPac) trading account balance and positions, then syncs the data to Google Sheets for tracking.
 
@@ -68,7 +68,7 @@ GOOGLE_SHEETS_ID=your_google_spreadsheet_id
 ## Usage
 
 ```bash
-python daily_check.py
+python shioaji_sync.py
 ```
 
 ## Supported Platforms
@@ -84,7 +84,7 @@ python daily_check.py
 
 ```bash
 shioaji/
-├── daily_check.py    # Main script
+├── shioaji_sync.py   # Main script
 ├── requirements.txt  # Python dependencies
 ├── .env.example      # Template for environment variables
 ├── .env              # Your credentials (create this, do not commit)

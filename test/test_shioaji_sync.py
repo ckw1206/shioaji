@@ -1,5 +1,5 @@
 """
-Test module for daily_check.py
+Test module for shioaji_sync.py
 Mocks Google Sheets API to prevent real writes during testing.
 """
 
@@ -11,7 +11,7 @@ from unittest.mock import patch, MagicMock
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Mock the gspread module before importing daily_check
+# Mock the gspread module before importing shioaji_sync
 import unittest
 
 
@@ -68,7 +68,7 @@ def mock_authorize(credentials):
 def run_tests():
     """Run all tests."""
     print("=" * 60)
-    print("Running daily_check.py tests (MOCK MODE)")
+    print("Running shioaji_sync.py tests (MOCK MODE)")
     print("=" * 60)
     print()
     
@@ -123,15 +123,15 @@ def run_tests():
         
         # Import and run the main function
         import importlib
-        import daily_check
-        importlib.reload(daily_check)
+        import shioaji_sync
+        importlib.reload(shioaji_sync)
         
         print("Test 1: Environment validation")
         print("-" * 40)
         
         # Test the validate_env function
         try:
-            daily_check.validate_env()
+            shioaji_sync.validate_env()
             print("  ✓ validate_env passed")
         except Exception as e:
             print(f"  ✗ validate_env failed: {e}")
@@ -141,7 +141,7 @@ def run_tests():
         print("-" * 40)
         
         try:
-            daily_check.main()
+            shioaji_sync.main()
             print("  ✓ main() completed successfully")
         except SystemExit as e:
             if e.code == 0:
@@ -160,7 +160,7 @@ def run_tests():
         os.environ['Shioaji_ID'] = ''
         
         try:
-            daily_check.validate_env()
+            shioaji_sync.validate_env()
             print("  ✗ Should have raised SystemExit")
         except SystemExit as e:
             print(f"  ✓ Correctly raised SystemExit: {e}")
