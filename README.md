@@ -75,7 +75,7 @@ python shioaji_sync.py
 
 Instead of running the script manually or wiring up your own OS-level scheduler, you can run it in a container that fires on a cron schedule.
 
-1. Make sure `.env` and `creds.json` exist in the project root (see Setup above).
+1. Make sure `.env` and `creds.json` exist in the project root (see Setup above), and create an empty log file so Docker doesn't mount it as a directory: `touch shioaji.log`.
 2. Optionally set `CRON_SCHEDULE` and `TZ` in `.env` (defaults to weekdays at 9am `Asia/Taipei` — see `.env.example`).
 3. Build and start the container:
 
@@ -100,7 +100,7 @@ Instead of running the script manually or wiring up your own OS-level scheduler,
 | Platform | Default Credentials Path |
 |:---------|:------------------------:|
 | Windows  | `./creds.json`           |
-| Linux    | `./creds.json`           |
+| Linux    | `./shioaji/creds.json`   |
 
 **Note**: Use `CREDS_PATH` environment variable to override the default path.
 
