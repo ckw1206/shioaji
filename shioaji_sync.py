@@ -74,7 +74,7 @@ def get_cred_path():
     """Return the credentials file path.
     
     Uses CREDS_PATH env var if set, otherwise defaults based on platform:
-    - Windows: ./creds.json
+    - Windows/macOS/other: ./creds.json
     - Linux: ./shioaji/creds.json
     """
     # Allow custom path via environment variable
@@ -85,9 +85,7 @@ def get_cred_path():
     # Default paths by platform
     if sys.platform.startswith("linux"):
         return "./shioaji/creds.json"
-    if sys.platform.startswith("win"):
-        return "./creds.json"
-    raise SystemExit("Unsupported platform. Exiting the script.")
+    return "./creds.json"  # ponytail: Windows, macOS, anything else
 
 def gsheet(sheet_name, val, row, cred_path=None):
     """Insert a row into the named worksheet in Google Sheets."""
